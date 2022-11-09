@@ -85,7 +85,7 @@ func AddTask(name string, seconds uint32, function Fn, once bool) (id int, err e
 
 //Manually task execution
 func ExecTask(id int) (err error) {
-	if _, ok := timers[id]; ok {
+	if timers[id] != nil {
 		timers[id].function()
 		return nil
 	}
@@ -121,19 +121,19 @@ func DeleteAllTasks() {
 
 //Stop Scheduler (and optionally Delete all Tasks) (if prev started)
 func StopScheduler(DelTasks bool) {
-	if started == false {
+	if !started {
 		return
 	}
 
 	doStop = true
 
-	if DelTasks == true {
+	if DelTasks {
 		DeleteAllTasks()
 		lastTimer = 0
 	}
 
 	//Wait until routine timers stop
-	for started != true && doStop != true {
+	for !started && !doStop {
 		time.Sleep(10 * time.Millisecond)
 	}
 }
@@ -141,12 +141,12 @@ func StopScheduler(DelTasks bool) {
 //Start Scheduler.
 func StartScheduler() {
 	//Wait until previus routine timers stop
-	for doStop != false {
+	for doStop {
 		time.Sleep(10 * time.Millisecond)
 	}
 
 	//Prevent double excecution
-	if started == true {
+	if started {
 		return
 	}
 
@@ -156,8 +156,8 @@ func StartScheduler() {
 	go func() {
 		var tick uint32
 
-		//While (doStop == false)
-		for doStop == false {
+		//While (!doStop)
+		for !doStop {
 			//wait 1 second (sleep routine)
 			time.Sleep(time.Second)
 			//increment tick counter (seconds from task scheduler start)
@@ -176,7 +176,7 @@ func StartScheduler() {
 						function()
 						return
 					}(value.function)
-					if value.once == true {
+					if value.once {
 						DeleteTask(key)
 					}
 				}
