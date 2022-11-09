@@ -52,21 +52,20 @@ func SetTasksLimit(limit int) {
 //function is a func task
 //once determine if it's an one time task
 func AddTask(name string, seconds uint32, function Fn, once bool) (id int, err error) {
-
 	if len(timers) >= tasksLimit {
-		err = errors.New("Too many tasks!")
+		err = errors.New("too many tasks")
 		return 0, err
 	}
 
 	//Seconds is uint32, the limit is 4294967295, but 3155760000 seconds is 100 years, should be enough
 	if seconds >= 3155760001 {
-		err = errors.New("Too much time!")
+		err = errors.New("too much time")
 		return 0, err
 	}
 
 	//this should never happen
 	if lastTimer >= 4294967290 {
-		err = errors.New("Too many tasks, danger of overflow!")
+		err = errors.New("too many tasks, danger of overflow")
 	}
 
 	//increase id
@@ -90,7 +89,7 @@ func ExecTask(id int) (err error) {
 		timers[id].function()
 		return nil
 	}
-	err = errors.New("Task does not exist")
+	err = errors.New("task does not exist")
 	return err
 }
 
@@ -101,7 +100,6 @@ func CountTasks() int {
 
 //List Tasks (ID, NAME, SECONDS)
 func ListTasks() (list map[int]*TList) {
-
 	list = make(map[int]*TList)
 
 	for key, value := range timers {
@@ -112,21 +110,17 @@ func ListTasks() (list map[int]*TList) {
 }
 
 //Delete a Task in the timers list (if exists)
-func DelTask(id int) {
+func DeleteTask(id int) {
 	delete(timers, id)
 }
 
 //Delete all Tasks in the timers list (if exists)
-func DelAllTasks() (err error) {
-	for key := range timers {
-		delete(timers, key)
-	}
-	return nil
+func DeleteAllTasks() {
+	timers = map[int]*timer{}
 }
 
 //Stop Scheduler (and optionally Delete all Tasks) (if prev started)
 func StopScheduler(DelTasks bool) {
-
 	if started == false {
 		return
 	}
@@ -134,7 +128,7 @@ func StopScheduler(DelTasks bool) {
 	doStop = true
 
 	if DelTasks == true {
-		DelAllTasks()
+		DeleteAllTasks()
 		lastTimer = 0
 	}
 
@@ -146,7 +140,6 @@ func StopScheduler(DelTasks bool) {
 
 //Start Scheduler.
 func StartScheduler() {
-
 	//Wait until previus routine timers stop
 	for doStop != false {
 		time.Sleep(10 * time.Millisecond)
@@ -161,7 +154,6 @@ func StartScheduler() {
 
 	//Run Scheduler loop in go routine
 	go func() {
-
 		var tick uint32
 
 		//While (doStop == false)
@@ -185,7 +177,7 @@ func StartScheduler() {
 						return
 					}(value.function)
 					if value.once == true {
-						DelTask(key)
+						DeleteTask(key)
 					}
 				}
 			}

@@ -6,7 +6,7 @@
 
 ---
 
-# Summary 
+# Summary
 
 Go Task Scheduler is a basic (periodic and one-shot) task scheduler.
 
@@ -28,9 +28,9 @@ CountTasks Returns the count of existing tasks in the scheduler.
 
 ListTasks Returns the list of existing tasks in the scheduler (ID, Name, Time Interval (in seconds, counted from when StartScheduler was executed) and if it is a one-time task (if false, the task is periodic)
 
-DelTask ​​Deletes a task (according to the supplied ID) from the scheduler. If it doesn't exist, it has no effect. It does not return information.
+DeleteTask ​​Deletes a task (according to the supplied ID) from the scheduler. If it doesn't exist, it has no effect. It does not return information.
 
-DelAllTasks Deletes all tasks from the scheduler. If none exists, it has no effect. It does not return information.
+DeleteAllTasks Deletes all tasks from the scheduler. If none exists, it has no effect. It does not return information.
 
 ---
 
@@ -56,9 +56,9 @@ CountTasks Devuelve la cuenta de las tareas existentes en el programador.
 
 ListTasks Devuelve la lista de tareas existentes en el programador (ID, Nombre, Intervalo de tiempo (en segundos, a contar desde que se ejecutó StartScheduler) y si es una tarea de una sola vez (si es falso, la tarea es periodica)
 
-DelTask Elimina una tarea (segun el ID proporcionado) del programador. Si no existe no surte efecto. No devuelve informacion.
+DeleteTask Elimina una tarea (segun el ID proporcionado) del programador. Si no existe no surte efecto. No devuelve informacion.
 
-DelAllTasks Elimina todas las tareas del programador. Si no existe ninguna no surte efecto. No devuelve informacion.
+DeleteAllTasks Elimina todas las tareas del programador. Si no existe ninguna no surte efecto. No devuelve informacion.
 
 # Example
 
