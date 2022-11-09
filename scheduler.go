@@ -57,14 +57,14 @@ func AddTask(name string, seconds uint32, function Fn, once bool) (id int, err e
 		return 0, err
 	}
 
-	//Seconds is uint32, the limit is 4294967295, but 3155760000 seconds is 100 years, should be enough
-	if seconds >= 3155760001 {
+	//3155760000 seconds is 100 years, should be enough
+	if seconds >= uint32(3155760001) {
 		err = errors.New("too much time")
 		return 0, err
 	}
 
 	//this should never happen
-	if lastTimer >= 4294967290 {
+	if lastTimer >= 2147483645 {
 		err = errors.New("too many tasks, danger of overflow")
 	}
 
@@ -155,17 +155,13 @@ func StartScheduler() {
 	//Run Scheduler loop in go routine
 	go func() {
 		var tick uint32
+		tick = uint32(time.Now().Unix())
 
 		//While (!doStop)
 		for !doStop {
 			//wait 1 second (sleep routine)
-			time.Sleep(time.Second)
-			//increment tick counter (seconds from task scheduler start)
-			tick++
-
-			//prevents overflow, set tick to 0 (this should never happen)
-			if tick > 4294967290 {
-				tick = 0
+			for uint32(time.Now().Unix()) < tick+1 {
+				time.Sleep(10 * time.Millisecond)
 			}
 
 			for key, value := range timers {
